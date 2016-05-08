@@ -381,3 +381,24 @@ ldapsearch -H ldapi:/// -b "cn=schema,cn=config" dn 2>/dev/null | sed -n 's/^dn:
 ldapsearch -H ldapi:/// -b "cn=schema,cn=config" dn 2>/dev/null | sed 's/^dn: cn={[0-9-]+}(.*),cn=schema,cn=config/%1/'
 ldapsearch -H ldapi:/// -b "cn=schema,cn=config" dn 2>/dev/null | grep -E "^dn: cn={[0-9-]+}.*,cn=schema,cn=config"
 vim bin/openldap-install.bash
+mv -v .bash_history{,~}
+git pull
+systemctl status slapd
+systemctl
+ls -hal
+vim bin/openldap-install.bash
+history | grep install
+history | grep 'yum install'
+yum install vim-enhanced
+vim bin/openldap-install.bash
+openldap-install.bash
+vim bin/openldap-install.bash
+systemctl status rsyslog 
+ls -hal /etc/rsyslog.d/listen.conf 
+cat /etc/rsyslog.d/listen.conf 
+cat /etc/rsyslog.conf 
+git add bin/openldap-install.bash 
+git add .bash_history
+vi bin/openldap-install.bash
+vim bin/openldap-install.bash
+git add bin/openldap-install.bash 

@@ -20,6 +20,7 @@ mkdir -vpm 0755 /var/log/slapd
 chown -c ldap. /var/log/slapd
 
 # Redirect all log files through rsyslog.
+sed -i "/local4.*/d" /etc/rsyslog.conf
 cat > /etc/rsyslog.d/slapd.conf << EOF
 local4.* /var/log/slapd/slapd.log
 EOF
@@ -38,7 +39,7 @@ for ldif in /etc/openldap/schema/*.ldif; do
  REGEX=$(basename ${ldif} | cut -d. -f1);
  INSTALLED=$(ldapsearch -H ldapi:/// -b "cn=schema,cn=config" dn 2>/dev/null | grep -E "^dn: cn={[0-9-]+}.*,cn=schema,cn=config");
  if [[ ${INSTALLED} =~ ${REGEX} ]]; then echo "${REGEX}: already installed.";
- else echo -n "${REGEX}: installing..."; ldapadd -Y EXTERNAL -H ldapi:/// -f ${ldif}; echo "done."; fi; done;
+ else echo -n "${REGEX}: installing..."; p=$(ldapadd -Y EXTERNAL -H ldapi:/// -f ${ldif} 2>1); echo -e "done.\n${p}"; fi; done;
 
 # 4. Set openLDAP domain name
 # 4.1. Specify the password generated above for "olcRootPW" section
