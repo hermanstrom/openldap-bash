@@ -402,3 +402,111 @@ git add .bash_history
 vi bin/openldap-install.bash
 vim bin/openldap-install.bash
 git add bin/openldap-install.bash 
+ls -hal
+mv -v .bash_history{,~}
+git pull
+openldap-install.bash 
+vim bin/openldap-install.bash 
+openldap-migrate.bash 
+ls -l /usr/share/migrationtools/migrate_common.ph 
+openldap-migrate.bash 
+ls -l /usr/share/migrationtools/migrate_common.ph 
+vim /usr/share/migrationtools/migrate_common.ph 
+vim /usr/share/migrationtools/migrate_all_online.sh 
+vim /usr/share/migrationtools/migrate_common.ph 
+openldap-migrate.bash | less
+openldap-migrate.bash 
+ldapsearch -h localhost -p 389 -x -b "" -s base -LLL supportedSASLMechanisms
+yum list *sasl*
+yum list *sasl*.{noarch,x86_64}
+yum info cyrus-sasl-ldap.x86_64
+yum info cyrus-sasl-ntlm.x86_64
+yum info cyrus-sasl-gssapi.x86_64
+yum install cyrus-sasl-ldap.x86_64
+yum install cyrus-sasl-gssapi.x86_64
+rpm -lq cyrus-sasl-ldap
+rpm -lq cyrus-sasl-gssapi
+yum list *sasl*
+yum list *sasl*.{noarch,x86_64}
+rpm -lq cyrus-sasl
+vim /etc/sysconfig/saslauthd
+vim /etc/sasl2/Sendmail.conf 
+less /usr/share/doc/cyrus-sasl-2.1.26/LDAP_SASLAUTHD
+yum list *sasl*.{noarch,x86_64}
+rpm -lq cyrus-sasl-lib
+vim /usr/share/migrationtools/migrate_all_online.sh 
+ldapsearch -H ldapi:/// -b "cn=schema,cn=config" dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b "olcDatabase={1}monitor,cn=config" dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b "cn=config" "olcDatabase=*" dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b "cn=config" dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b "olcDatabase={2}hdb,cn=config"
+ldapsearch -H ldapi:/// -b "olcDatabase={1}monitor,cn=config"
+ldapsearch -H ldapi:/// -b "olcDatabase={0}config,cn=config"
+ldapsearch -H ldapi:/// -b "olcDatabase={-1}frontend,cn=config"
+ldapsearch -H ldapi:/// -b "cn=config" dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b "cn=config" dn 2>/dev/null | grep -E "^dn: "
+ldapsearch -H ldapi:/// -b "cn={0}core,cn=schema,cn=config"
+yum install vim-enhanced
+yum install migrationtools
+rpm -qa | grep -E "migrationtools~"; echo ${?}
+rpm -qa | grep -E "migrationtools"; echo ${?}
+cat /usr/share/migrationtools/migrate_common.ph 
+yum install autofs
+vim /etc/auto
+vim /etc/autofs.conf 
+vim /etc/auto.master
+vim /usr/share/migrationtools/migrate_common.ph 
+cp -av bin/openldap-{install,migrate}.bash
+vim bin/openldap-migrate.bash
+chmod -c +x bin/openldap-migrate.bash
+openldap-migrate.bash
+vim bin/openldap-migrate.bash
+openldap-migrate.bash | less
+vim bin/openldap-migrate.bash
+openldap-migrate.bash | less
+vim bin/openldap-migrate.bash
+/usr/share/migrationtools/migrate_automount.pl /etc/auto.master | less
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+/usr/share/migrationtools/migrate_automount.pl /etc/auto.master | less
+/usr/share/migrationtools/migrate_migrate_profile.pl ldap | less
+/usr/share/migrationtools/migrate__profile.pl ldap | less
+/usr/share/migrationtools/migrate_profile.pl ldap | less
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+/usr/share/migrationtools/migrate_group.pl /etc/group | less
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+chfn
+chfn herman
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+grep '$EXTENDED_SCHEMA' /usr/share/migrationtools/migrate_*
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+sed '/^#if ($EXTENDED_SCHEMA) {/,+4s/^#//' /usr/share/migrationtools/migrate_common.ph | less 
+yum -y reinstall migrationtools
+sed -n '/^#if ($EXTENDED_SCHEMA) {/,+4s/^#//p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -n '/^$DEFAULT_MAIL_DOMAIN/,s/padl.com/gncom.net/p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -n '/^$DEFAULT_MAIL_DOMAIN/ s/padl.com/gncom.net/p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -n '/^#if ($EXTENDED_SCHEMA) {/, +4s/^#//p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -n '/^#if ($EXTENDED_SCHEMA) {/ +4s/^#//p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -n '/^#if ($EXTENDED_SCHEMA) {/, +4s/^#//p' /usr/share/migrationtools/migrate_common.ph | less 
+vim bin/openldap-install.bash 
+openldap-install.bash 
+vim bin/openldap-install.bash 
+openldap-install.bash 
+vim bin/openldap-install.bash 
+openldap-install.bash 
+/usr/share/migrationtools/migrate_profile.pl ldap | less
+/usr/share/migrationtools/migrate_base.pl | less
+/usr/share/migrationtools/migrate_automount.pl /etc/auto.master | less
+vim /usr/share/migrationtools/migrate_profile.pl
+vim bin/openldap-install.bash 
+openldap-install.bash | less 
+vim bin/openldap-install.bash 
+openldap-migrate.bash | less
+/usr/share/migrationtools/migrate_aliases.pl /etc/aliases | less
+openldap-migrate.bash | less
+/usr/share/migrationtools/migrate_base.pl | less
+openldap-migrate.bash 
+git add bin/openldap-install.bash 
+git add bin/openldap-migrate.bash 
+git add .bash_history

@@ -1,7 +1,12 @@
 #!/bin/bash
 #
-PW='secret'
-BASE='dc=gncom,dc=net'
+# $Id: openldap-install.bash,v 0.1 2016/05/11 20:05:35 hermanstrom Exp $
+#
+# This script installs openLDAP directory service on CentOS or RHEL v7
+#
+PW=secret;
+BASE=dc=gncom,dc=net;
+ADMIN=root;
 
 # 0. Enable SELinux for higher security.
 setenforce 1
@@ -47,7 +52,7 @@ ldapmodify -Y EXTERNAL -H ldapi:/// << EOF
 dn: olcDatabase={1}monitor,cn=config
 changetype: modify
 replace: olcAccess
-olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.base="cn=root,${BASE}" read by * none
+olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.base="cn=${ADMIN},${BASE}" read by * none
 
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
@@ -57,7 +62,7 @@ olcSuffix: ${BASE}
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 replace: olcRootDN
-olcRootDN: cn=root,${BASE}
+olcRootDN: cn=${ADMIN},${BASE}
 
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
@@ -67,9 +72,9 @@ olcRootPW: $(slappasswd -s ${PW} -c '$6$%s' | tr -d '\n')
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 add: olcAccess
-olcAccess: {0}to attrs=userPassword,shadowLastChange by dn="cn=root,${BASE}" write by anonymous auth by self write by * none
+olcAccess: {0}to attrs=userPassword,shadowLastChange by dn="cn=${ADMIN},${BASE}" write by anonymous auth by self write by * none
 olcAccess: {1}to dn.base="" by * read
-olcAccess: {2}to * by dn="cn=root,${BASE}" write by * read
+olcAccess: {2}to * by dn="cn=${ADMIN},${BASE}" write by * read
 EOF
 
 # 5. If Firewalld is running, allow LDAP service. LDAP uses 389/TCP
