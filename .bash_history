@@ -510,3 +510,103 @@ openldap-migrate.bash
 git add bin/openldap-install.bash 
 git add bin/openldap-migrate.bash 
 git add .bash_history
+git commit -m "openLDAP migrate script created and install improved."
+git push
+git config --global push.default simple
+git push
+vim .gitconfig 
+vim .git/config 
+vim .git/hooks/applypatch-msg.sample 
+vim .git/hooks/pre-commit.sample 
+vim .git/hooks/update.sample 
+vim .git/hooks/commit-msg.sample 
+yum install mlocate -y
+updatedb 
+locate systemd
+yum list *vpn*
+yum -y install openldap-clients nss-pam-ldapd
+authconfig --enableldap --enableldapauth --ldapserver=127.0.0.1 --ldapbasedn=dc=gncom,dc=net --enablemkhomedir --update
+cat > mkhomedir.te << EOFmodule mkhomedir 1.0;
+
+require {
+        type unconfined_t;
+        type oddjob_mkhomedir_exec_t;
+        class file entrypoint;
+}
+
+allow unconfined_t oddjob_mkhomedir_exec_t:file entrypoint;
+EOF
+
+checkmodule -m -M -o mkhomedir.mod mkhomedir.te
+yum provides *bin/checkmodule
+yum install checkpolicy
+checkmodule -m -M -o mkhomedir.mod mkhomedir.te
+semodule_package --outfile mkhomedir.pp --module mkhomedir.mod
+yum provides *bin/semodule_package
+yum install policycoreutils
+yum install policycoreutils-python
+semodule_package --outfile mkhomedir.pp --module mkhomedir.mod
+semodule_package --help
+semodule_package --o mkhomedir.pp --m mkhomedir.mod
+semodule_package -o mkhomedir.pp -m mkhomedir.mod
+semodule -i mkhomedir.pp
+semodule --help
+semodule -r mkhomedir.pp
+semodule -r mkhomedir
+semodule -v -i mkhomedir.pp
+semodule -v -r mkhomedir
+semodule -v -i mkhomedir.pp
+ldapsearch -H ldapi:/// -b "cn=config" dn 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" dn 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" "cn=*" dn 2>/dev/null | grep -E "^dn: " | less 
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" "uid=*" dn 2>/dev/null | grep -E "^dn: " | less 
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+ldapsearch -H ldapi:/// -b "ou=*,dc=gncom,dc=net" dn 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "ou=*,dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=*" | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=*"  2>/dev/null | grep -E "^dn: " | less 
+/usr/share/migrationtools/migrate_services.pl /etc/services | less
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "uid*,ou=people"  2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "uid=*,ou=people"  2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "uid=*"  2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "oud=*" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=*" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" "uid=*" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" 2>/dev/null | less 
+ldapsearch -H ldapi:/// -b "uid=*,ou=people,dc=gncom,dc=net" 2>/dev/null | less 
+ldapsearch -H ldapi:/// -b "ou=people,dc=gncom,dc=net" 2>/dev/null | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=*" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "uid=*" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | grep -E "nextstep" | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | grep -E -i "mon" | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=people" 2>/dev/null | grep -E "^dn: " | grep -E -i "mon" | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=people" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "ou=people" "uid=*" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" ou 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "uid=" ou 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" uid 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(uid=*)" 2>/dev/null | grep -E "^dn: " | less 
+man ldapsearch
+ldapsearch -LLL -b "dc=gncom,dc=net" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -LLL -b "dc=gncom,dc=net" | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(uid=*)" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(ou=*)" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(uid=*)(ou=*)" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(cn=*)" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(uid=*)" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(cn=*)" 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(cn=*)" 2>/dev/null | grep -E "ou=people" | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(cn=*)" 2>/dev/null | grep -E "ou=people" | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(cn=*)" 2>/dev/null | grep "ou=people" | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" 2>/dev/null | grep "ou=people" | less 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" | less 
+cp -av bin/openldap-{install,client}.bash 
+vim bin/openldap-client.bash 
+vim bin/openldap-install.bash 
+git add bin/openldap-client.bash bin/openldap-install.bash 

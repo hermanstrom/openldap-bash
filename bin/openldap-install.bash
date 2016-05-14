@@ -13,7 +13,7 @@ setenforce 1
 setsebool -P domain_kernel_load_modules 1
 
 # 1. Install OpenLDAP Server
-yum -y install openldap-servers openldap-clients
+yum -y install openldap-servers openldap-clients nss-pam-ldapd
 cp -av /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
 chown -cR ldap. /var/lib/ldap
 restorecon -vR /var/lib/ldap
