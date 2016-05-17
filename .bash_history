@@ -610,3 +610,19 @@ cp -av bin/openldap-{install,client}.bash
 vim bin/openldap-client.bash 
 vim bin/openldap-install.bash 
 git add bin/openldap-client.bash bin/openldap-install.bash 
+git add .bash_history
+git commit -m "openLDAP migrate script created client."
+git push
+yum list chrony
+yum install chrony
+date
+rpm -lq chrony
+systemctl status chronyd
+systemctl start chronyd
+date
+systemctl status chronyd
+date
+git add .bash_history
+git commit -m "openLDAP chronyd installed."
+git add .bash_history
+git commit -m "openLDAP chronyd installed."
