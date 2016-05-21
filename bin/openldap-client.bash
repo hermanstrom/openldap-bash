@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# $Id: openldap-client.bash,v 0.1 2016/05/11 20:05:35 hermanstrom Exp $
+# $Id: openldap-client.bash,v 0.2 2016-05-20 20:35:35 hermanstrom Exp $
 #
 # This script installs openLDAP client on CentOS or RHEL v7
 #

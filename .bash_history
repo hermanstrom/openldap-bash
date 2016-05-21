@@ -626,3 +626,136 @@ git add .bash_history
 git commit -m "openLDAP chronyd installed."
 git add .bash_history
 git commit -m "openLDAP chronyd installed."
+git add .bash_history
+git commit -m "openLDAP chronyd installed."
+git push
+shutdown 
+ls -l /etc/pki/tls/certs/
+vim /etc/pki/tls/certs/Makefile 
+vim /etc/pki/tls/openssl.cnf 
+cd /etc/pki/tls/certs
+make slapd.pem
+ls -l
+vim slapd.pem 
+vim slapd.key
+make slapd.key
+openssl rsa -in slapd.key -out slapd.key 
+ls -l
+make slapd.csr
+ls -l
+openssl req -in slapd.csr -noout -text
+cat slapd.csr
+ls -l
+vim slapd.crt
+openssl x509 -in slapd.crt -noout -text
+vim /etc/pki/tls/certs/Makefile 
+man req
+vim slapd.crt
+openssl x509 -in slapd.crt -noout -text
+pwd
+yum provives */ca-bundle.crt
+ls -l 
+less /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+less /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt 
+openssl x509 -in /etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt -noout -text
+ls -l /etc/openldap/certs/
+cp -av slapd.{crt,key} /etc/openldap/certs/ 
+vim /etc/openldap/certs/ca.pem
+ls -l /etc/openldap/certs/
+mv -v /etc/openldap/certs/ca.{pem,crt}
+ls -l /etc/openldap/certs/
+chmod -c 0400 /etc/openldap/certs/{slapd.{crt,key},ca.crt}
+chown -c ldap. /etc/openldap/certs/{slapd.{crt,key},ca.crt}
+restorecon -vR /etc/openldap/certs/{slapd.{crt,key},ca.crt}
+restorecon -vR /etc/openldap/certs/*
+ldapsearch -H ldapi:/// -b "cn=config" | less 
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" | less 
+vim /etc/sysconfig/slapd
+ls -l /etc/openldap/certs/
+file /etc/openldap/certs/*
+cat /etc/openldap/certs/password 
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" | less 
+cd
+vim $(which openldap-client.bash)
+useradd 
+vim $(which openldap-install.bash)
+groupadd 
+cnfn --help
+chfn --help
+finger herman
+yum install finger
+finger herman
+id maria
+useradd -u 65565 -U -g 65565 -G wheel -p $(slappasswd -s secret -c '$6$%s' | tr -d '\n') maria;
+id maria
+groupadd -g 65565 maria; useradd -u 65565 -g 65565 -G wheel -p $(slappasswd -s secret -c '$6$%s' | tr -d '\n') maria;
+id maria
+finger maria
+chfn -f "Maria Strom" -o "SOHO" -p "+1 443-653-2620" -h "+1 347-419-3397" maria
+finger maria
+vipw 
+userdel 
+userdel -r maria
+groupdel 
+groupdel maria
+groupadd -g 65565 maria; useradd -u 65565 -g 65565 -G wheel -p $(slappasswd -s secret -c '$6$%s' | tr -d '\n') -c "Maria Strom,SOHO,+1 443-653-2620,+1 347-419-3397" maria;
+id maria
+finger maria
+usermod 
+su - herman
+userdel -r maria
+groupadd -g 65565 maria; useradd -u 65565 -g 65565 -G wheel -p "$(slappasswd -s secret -c '$6$%s')" -c "Maria Strom,SOHO,+1 443-653-2620,+1 347-419-3397" maria;
+finger maria
+su - herman
+userdel -r maria
+finger maria
+id maria
+groupadd -g65565 maria; useradd -u65565 -g65565 -Gwheel -p$(slappasswd -s secret -c '$6$%s') -c "Maria Strom,SOHO,+1 443-653-2620,+1 347-419-3397" maria;
+id maria
+finger maria
+su - herman
+passwd maria
+vipw 
+vipw -s
+userdel -r maria
+finger maria
+groupadd -g65565 maria; useradd -u65565 -g65565 -Gwheel -p '{CRYPT}$6$BjKl4bboM1rzn0VU$AVHMcJh6QLWCc76/5.96VCAxHoEeTTCeYBX.LQh59zVUdOckcgrG8OY1nitkrFqcaPtpWPulkPDm12QkBW4fJ1' -c "Maria Strom,SOHO,+1 443-653-2620,+1 347-419-3397" maria;
+finger maria
+su - herman
+passwd maria
+su - herman
+vipw -s
+userdel -r maria
+groupadd -g65565 maria; useradd -u65565 -g65565 -Gwheel -p'$6$n2zXlfKa$4VxD2erTIFM1ORi77ulvX6.TR9VO.X7LBbkEVQnve7zVaJ6eeGR6PWEoOfmX0HHURG3iv7tjmuhdwtO8elrWG/' -c"Maria Strom,SOHO,+1 443-653-2620,+1 347-419-3397" maria;
+finger maria
+su - herman
+userdel -r maria
+groupadd -g65565 maria; useradd -u65565 -g65565 -Gwheel -p$(slappasswd -s secret -n -c '$6$%s' | sed 's/^{CRYPT}//') -c"Maria Strom,SOHO,+1 443-653-2620,+1 347-419-3397" maria;
+su - herman
+vipw
+vim bin/openldap-migrate.bash 
+vim bin/openldap-install.bash 
+shutdown
+vim bin/openldap-install.bash 
+cp -av bin/openldap-{install,maria}.bash 
+vim bin/openldap-install.bash 
+vim bin/openldap-maria.bash 
+git ids
+git --help
+ls -al bin
+date 
+date --help
+date +%X
+date +%T
+date '+%F %T'
+ls -al bin
+vim bin/openldap-maria.bash 
+vim bin/openldap-migrate.bash 
+vim bin/openldap-maria.bash 
+vim bin/openldap-migrate.bash 
+vim bin/openldap-install.bash 
+vim bin/openldap-user-ldif.bash 
+vim bin/openldap-client.bash 
+vim bin/openldap-user-ldif.bash 
+vim bin/openldap-client.bash 
+vim bin/openldap-user-ldif.bash 

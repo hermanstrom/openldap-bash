@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# $Id: openldap-migrate.bash,v 0.1 2016/05/11 20:05:35 hermanstrom Exp $
+# $Id: openldap-migrate.bash,v 0.2 2016-05-20 20:35:35 hermanstrom Exp $
 #
 # This script migrates local objects into openLDAP on CentOS/RHEL v7
 #

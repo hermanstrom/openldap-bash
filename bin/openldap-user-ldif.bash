@@ -1,5 +1,9 @@
 #!/bin/bash
 #
+# $Id: openldap-user-ldif.bash,v 0.2 2016-05-20 20:35:35 hermanstrom Exp $
+#
+# This script is an attempt at user and group migration
+#
 PASSWD='secret'
 SUFFIX='dc=gncom,dc=net'
 
