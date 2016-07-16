@@ -759,3 +759,131 @@ vim bin/openldap-client.bash
 vim bin/openldap-user-ldif.bash 
 vim bin/openldap-client.bash 
 vim bin/openldap-user-ldif.bash 
+vim .bashrc 
+git add .bash_history bin/openldap-{user-ldif,migrate,install,client}.bash
+git commit -m "openLDAP Client and revision to v 0.2."
+git push
+date
+ls -la /etc/pki/ca-trust/
+ls -la /etc/pki/tls/certs/
+ls -la /etc/pki/tls/certs
+( cd /etc/pki/tls/certs; make sendmail.pem; )
+ls -la /etc/pki/tls/certs/sendmail.pem 
+less /etc/pki/tls/certs/sendmail.pem 
+( cd /etc/pki/tls/certs; vim Makefile; )
+( cd /etc/pki/tls/certs; make genkey; )
+( cd /etc/pki/tls/certs; ls -al; )
+man bash
+vim .bash_profile 
+vim .bash_logout 
+history | grep 'yum install'
+yum install acpid bc bind-utils finger gpm man nmap rsync vim-enhanced wget mlocate chrony 
+shutdown
+man bash
+vim .bash_profile 
+vim .bash_logout 
+history | grep 'yum install'
+yum install acpid bc bind-utils finger gpm man nmap rsync vim-enhanced wget mlocate chrony 
+shutdown
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd ldapadd -x -D cn=root,dc=gncom,dc=net -w secret
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | ldapadd -x -D cn=root,dc=gncom,dc=net -w secret
+ldapsearch -H ldapi:/// -b "cn=config" dn 2>/dev/null | grep -E "^dn: " | less 
+ldapsearch -H ldapi:/// -b "cn=schema,cn=config | less "
+ldapsearch -LLL -H ldapi:/// -b "cn=schema,cn=config | less "
+ldapsearch -LLL -H ldapi:/// -b "cn=schema,cn=config" | less
+ldapsearch -H ldapi:/// -b "cn=schema,cn=config" | less
+yum provides */kerberos*
+yum provides */kerberos.{schema,ldif}
+yum provides */*{schema,ldif}
+yum provides */*.{schema,ldif}
+yum provides */sasl*.{schema,ldif}
+yum provides */*sasl*.{schema,ldif}
+yum provides */*SASL*.{schema,ldif}
+yum provides */*kerberos*.{schema,ldif}
+yum list krb5-server-ldap
+yum install krb5-server-ldap
+rpm -lq krb5-server-ldap
+vim /usr/share/doc/krb5-server-ldap-1.13.2/kerberos.ldif
+vim /usr/share/doc/krb5-server-ldap-1.13.2/60kerberos.ldif 
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | less
+/usr/share/migrationtools/migrate_passwd.pl /etc/passwd | ldapadd -v -x -D cn=root,dc=gncom,dc=net -w secret
+date +%T
+date '+%F %T'
+ls -al bin
+vim bin/openldap-user-ldif.bash 
+vim bin/openldap-user-ldif.bash 
+vim bin/openldap-user-ldif.bash 
+vim .bashrc 
+git add .bash_history bin/openldap-{user-ldif,migrate,install,client}.bash
+git commit -m "openLDAP Client and revision to v 0.2."
+git push
+date
+ls -la /etc/pki/ca-trust/
+ls -la /etc/pki/tls/certs/
+ls -la /etc/pki/tls/certs
+( cd /etc/pki/tls/certs; make sendmail.pem; )
+ls -la /etc/pki/tls/certs/sendmail.pem 
+less /etc/pki/tls/certs/sendmail.pem 
+( cd /etc/pki/tls/certs; vim Makefile; )
+( cd /etc/pki/tls/certs; make genkey; )
+( cd /etc/pki/tls/certs; ls -al; )
+man bash
+vim .bash_profile 
+vim .bash_logout 
+history | grep 'yum install'
+yum install acpid bc bind-utils finger gpm man nmap rsync vim-enhanced wget mlocate chrony 
+shutdown
+ls -hal
+mkdir -vp bin
+openldap-install.bash 
+vigr 
+vim bin/openldap-maria.bash 
+openldap-maria.bash 
+finger herman
+finger maria
+id maria
+id herman
+history | grep 'ldapsearch'
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" | less
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "olcDatabase={0}config,cn=config" | less
+openldap-migrate.bash 
+yum provides *bin/netstat
+yum install net-tools
+netstat -atp
+netstat -atpn
+openldap-client.bash 
+host c7openldap64s0
+host c7openldap64c0
+su - herman
+vim bin/openldap-client.bash 
+less /var/log/slapd/slapd.log 
+tail -50 /var/log/slapd/slapd.log | less
+vim bin/openldap-install.bash 
+vim bin/openldap-migrate.bash 
+sed -n '/^if ($EXTENDED_SCHEMA) {/, +4s/^/#/p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -n '/^if ($EXTENDED_SCHEMA) {/, +3s/^/#/p' /usr/share/migrationtools/migrate_common.ph | less 
+sed -i '/^if ($EXTENDED_SCHEMA) {/, +3s/^/#/' /usr/share/migrationtools/migrate_common.ph 
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(uid=maria)"
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" | less
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(&(objectClass=posixAccount)(uid=maria))"
+ldapsearch -H ldapi:/// -b "dc=gncom,dc=net" "(gidNumber=65565)"
+history | grep 'yum install'
+yum install acpid bc bind-utils finger gpm man nmap rsync vim-enhanced wget mlocate chrony net-tools
+yum update -y
+yum list kernel
+yum remove kernel-3.10.0-123.el7
+yum list kernel
+yum update kernel
+yum update -y
+yum list kernel
+yum remove kernel-3.10.0-327.13.1.el7
+reboot
+yum list kernel
+yum remove kernel-3.10.0-327.13.1.el7
+yum list kernel
+reboot
+man shutdown
+shutdown now
+mv -v .bash_history{,~}
+git pull
+mv -v .bash_history{~,}

@@ -4,7 +4,7 @@
 #
 # This script installs openLDAP client on CentOS or RHEL v7
 #
-SERVER=127.0.0.1
+SERVER=192.168.1.40
 BASE=dc=gncom,dc=net;
 
 # 1. Install OpenLDAP Client.
@@ -13,16 +13,8 @@ authconfig --enableldap --enableldapauth --ldapserver=${SERVER} --ldapbasedn=${B
 
 # 2. If SELinux is enabled, it needs to add a rule to allow creating home directories automatically by mkhomedir.
 cat > mkhomedir.te << EOF
-# create new
 module mkhomedir 1.0;
-
-require {
-        type unconfined_t;
-        type oddjob_mkhomedir_exec_t;
-        class file entrypoint;
-}
-
-#============= unconfined_t ==============
+require { type unconfined_t; type oddjob_mkhomedir_exec_t; class file entrypoint; }
 allow unconfined_t oddjob_mkhomedir_exec_t:file entrypoint;
 EOF
 
