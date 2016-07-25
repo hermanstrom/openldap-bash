@@ -9,15 +9,15 @@
 die() { echo "${1}" 1>&2; exit 1; };
 PW=secret;
 ADMIN=root;
-LDAPHOST=ldap;
+FQDN=$(hostname -f);
 LDAPI='ldapi:///'
-DOMAIN=gncom.net;
+DOMAIN=$(hostname -d);
 BASE=dc=gncom,dc=net;
 MIGDIR=/usr/share/migrationtools;
 COMMON=${MIGDIR}/migrate_common.ph;
 MT=$(basename ${MIGDIR});
 PERL=$(which perl 2>&1) || die "Perl not installed.";
-OU=(aliases mounts people group netgroup hosts networks protocols rpc services);
+OUKEY=(aliases mounts people group netgroup hosts networks protocols rpc services);
 ETCKEY=(ALIASES AUTOFS FSTAB HOSTS NETWORKS PASSWD GROUP SERVICES PROTOCOLS RPC NETGROUP);
 declare -A ETC=([ALIASES]=aliases [AUTOFS]=auto.master [FSTAB]=fstab\
  [HOSTS]=hosts [NETWORKS]=networks [PASSWD]=passwd [GROUP]=group\
@@ -43,13 +43,19 @@ CERT=${CERTS}/cert.pem;
 KEY=${CERTS}/key.pem;
 REQ=${CERTS}/req.pem;
 CA=${CERTS}/ca.pem;
+REALM=$(tr 'a-z' 'A-Z' <<< "${DOMAIN}")
+KERBEROSDBDIR=/var/kerberos/krb5kdc
+KRBCF=/etc/krb5.conf
+KDCCF=${KERBEROSDBDIR}/kdc.conf
+KADM5ACL=${KERBEROSDBDIR}/kadm5.acl
 
 # 1. Enable SELinux for higher security.
 setenforce 1
 setsebool -P domain_kernel_load_modules 1
 
 # 2. Install OpenLDAP Server
-yum -y install openldap-servers openldap-clients nss-pam-ldapd checkpolicy policycoreutils-python
+yum -y install openldap-servers openldap-clients nss-pam-ldapd checkpolicy policycoreutils-python cyrus-sasl-{gssapi,ldap}\
+ krb5-server{,-ldap}
 cp -av /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG 
 chown -cR ldap. /var/lib/ldap
 restorecon -vR /var/lib/ldap
@@ -67,9 +73,9 @@ local4.* /var/log/slapd/slapd.log
 EOF
 systemctl restart rsyslog
 
-# 3. Set OpenLDAP admin password
+# Set OpenLDAP admin password
 ldapadd -Y EXTERNAL -H ldapi:/// << EOF          
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}config,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}config,cn=config")
 changetype: modify
 add: olcRootPW
 olcRootPW: $(slappasswd -s ${PW} -c '$6$%s' | tr -d '\n')
@@ -85,32 +91,32 @@ for ldif in /etc/openldap/schema/*.ldif; do
 # 5. Set openLDAP domain name
 # Specify the password generated above for "olcRootPW" section
 ldapmodify -Y EXTERNAL -H ldapi:/// << EOF
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}monitor,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}monitor,cn=config")
 changetype: modify
 replace: olcAccess
 olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth" read by dn.base="cn=${ADMIN},${BASE}" read by * none
 
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
 changetype: modify
 replace: olcSuffix
 olcSuffix: ${BASE}
 
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
 changetype: modify
 replace: olcRootDN
 olcRootDN: cn=${ADMIN},${BASE}
 
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
 changetype: modify
 add: olcRootPW
 olcRootPW: $(slappasswd -s ${PW} -c '$6$%s' | tr -d '\n')
 
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
 changetype: modify
 replace: olcDbIndex
 olcDbIndex: uid,uidNumber,gidNumber,memberUid,uniqueMember,mail,surname,givenName,sn,member,objectClass,ou,cn eq,pres,sub
 
-$(ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
+$(ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 2>/dev/null | egrep "^dn: olcDatabase={[0-9-]+}hdb,cn=config")
 changetype: modify
 add: olcAccess
 olcAccess: {0}to attrs=userPassword,shadowLastChange by dn="cn=${ADMIN},${BASE}" write by anonymous auth by self write by * none
@@ -121,16 +127,52 @@ EOF
 # 6. If Firewalld is running, allow LDAP service. LDAP uses 389/TCP
 firewall-cmd --add-service=ldap --permanent; systemctl is-active firewalld && firewall-cmd --reload;
 
-# 7. Migrate local files into OpenLDAP server
+# Configure Kerberos service
+cp -avf /usr/share/doc/krb5-server-ldap-*/kerberos.schema /etc/openldap/schema/kerberos.schema;
+echo "include /etc/openldap/schema/kerberos.schema" > /etc/openldap/schema/kerberos.conf; restorecon -vR /etc/openldap/schema;
+slapcat -o ldif-wrap=no -f /etc/openldap/schema/kerberos.conf -F /tmp/ -n0 -s "cn={0}kerberos,cn=schema,cn=config" |\
+ sed "s/cn={0}kerberos/cn=kerberos/g" | head -n-8 | ldapadd -Y EXTERNAL -H ldapi:///;
+sed -i -e "/^# default_realm = / s/^#//; /^\[realms\]/, +4s/^#//; /^\[domain_realm\]/, +2s/^#//; s/kerberos.example.com/${FQDN}/; s/example.com/${DOMAIN}/; s/EXAMPLE.COM/${REALM}/;" ${KRBCF};
+cat >> ${KRBCF} << EOF
+
+[dbdefaults]
+ ldap_kerberos_container_dn = "ou=kerberos,${BASE}"
+
+[dbmodules]
+ openldap_ldapconf = {
+  db_library = kldap
+#  ldap_kerberos_container_dn = "ou=kerberos,${BASE}"
+  ldap_kdc_dn = "cn=${ADMIN},${BASE}"
+  ldap_kadmind_dn = "cn=${ADMIN},${BASE}"
+  ldap_service_password_file = /var/kerberos/krb5/service.keyfile
+  ldap_servers = ${LDAPI}
+  ldap_conns_per_server = 8
+ }
+EOF
+sed -i -e "s/EXAMPLE.COM/${REALM}/;" ${KDCCF}; # /#master_key_type = / s/#//;
+sed -i -e "s/EXAMPLE.COM/${REALM}/;" ${KADM5ACL};
+firewall-cmd --add-service=kerberos --permanent; systemctl is-active firewalld && firewall-cmd --reload;
+
+# Enable SASL Authentication
+cat > /etc/sasl2/slapd.conf << EOF
+pwcheck_method: auxprop
+auxprop_plugin: sasldb
+mech_list: gssapi
+EOF
+sed -i -e "/^MECH=/ s|pam|\"$(saslauthd -v 2>&1 | sed -ne 's/^authentication mechanisms: //p')\"|" /etc/sysconfig/saslauthd
+systemctl start saslauthd.service
+systemctl enable saslauthd.service
+
+# Migrate local files into OpenLDAP server
 sed -i '/^$/d' /etc/${ETC[FSTAB]};
 rpm -qa | grep -E ${MT} 2>&1 && yum -y reinstall ${MT} || yum -y install ${MT};
 
 REGEX="/^\$DEFAULT_MAIL_DOMAIN/ s/padl.com/${DOMAIN}/g; /^\$DEFAULT_BASE/ s/dc=padl,dc=com/${BASE}/g;\
  /^\$EXTENDED_SCHEMA/ s/0/1/"; #; /^#if (\$EXTENDED_SCHEMA)/, +4s/^#//"; 
-for ou in ${OU[@]}; do REGEX+="; s/ou=${ou^}/ou=${ou}/g"; done; sed -i -e "${REGEX}" ${COMMON};
+for ou in ${OUKEY[@]}; do REGEX+="; s/ou=${ou^}/ou=${ou}/g"; done; sed -i -e "${REGEX}" ${COMMON};
 
 ${MIGDIR}/migrate_base.pl | ldapadd -x -D cn=${ADMIN},${BASE} -w ${PW};
-${MIGDIR}/migrate_profile.pl "$LDAPHOST" | ldapadd -x -D cn=${ADMIN},${BASE} -w ${PW};
+${MIGDIR}/migrate_profile.pl "$(hostname -s)" | ldapadd -x -D cn=${ADMIN},${BASE} -w ${PW};
 for key in ${ETCKEY[@]}; do [[ -e /etc/${ETC[$key]} ]] &&\
  ${MIGDIR}/migrate_${MIGRATE[$key]}.pl /etc/${ETC[$key]} | ldapadd -x -D cn=${ADMIN},${BASE} -w ${PW}; done;
 [[ -e /etc/${ETC[NETGROUP]} ]] && for map in migrate_netgroup_by{user,host}.pl; do\
@@ -168,7 +210,7 @@ replace: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: ${KEY}
 EOF
 
-sed -i '/SLAPD_URLS=/ s|"ldapi:/// ldap:///"|"ldapi:/// ldap:/// ldaps:///"|p' ${SLAP_URL_CF};
+sed -i '/SLAPD_URLS=/ s|"ldapi:/// ldap:///"|"ldapi:/// ldap:/// ldaps:///"|' ${SLAP_URL_CF};
 systemctl restart slapd
 firewall-cmd --add-service=ldaps --permanent; systemctl is-active firewalld && firewall-cmd --reload;
 

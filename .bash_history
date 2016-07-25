@@ -887,3 +887,42 @@ shutdown now
 mv -v .bash_history{,~}
 git pull
 mv -v .bash_history{~,}
+mv -vf .bash_history{,~}
+git pull
+openldap-server.bash 
+vim $(which openldap-server.bash)
+history | grep 'ldapsearch'
+ldapsearch -LLL -H ldapi:/// -b "cn=schema,cn=config" | less
+ldapsearch -x -LLL -H ldapi:/// -b "cn=schema,cn=config" | less
+ldapsearch -x -LLL -H ldapi:/// -b "cn=config" | less
+ldapsearch -x -LLL -H ldapi:/// -b "" | less
+ldapsearch -x -v -LLL -H ldapi:/// -b "" | less
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" | less
+ldapwhoami -Y EXTERNAL
+ldapwhoami -Y EXTERNAL -D cn=root,dc=gncom,dc=net -w secret
+history | grep 'base'
+locate base.pl
+updatedb 
+locate base.pl
+/usr/share/migrationtools/migrate_base.pl | less
+vim /usr/share/migrationtools/migrate_common.ph 
+vim $(which openldap-server.bash)
+/usr/share/migrationtools/migrate_base.pl | less
+vim $(which openldap-server.bash)
+/usr/share/migrationtools/migrate_base.pl | ldapadd -Y EXTERNAL -D cn=${ADMIN},${BASE} -w ${PW};
+/usr/share/migrationtools/migrate_base.pl | ldapadd -Y EXTERNAL -D cn=root,dc=gncom,dc=net -w secret;
+/usr/share/migrationtools/migrate_base.pl | ldapadd -x -D cn=root,dc=gncom,dc=net -w secret;
+ldapwhoami -Y EXTERNAL -D cn=root,dc=gncom,dc=net -w secret
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" | less
+ldapsearch -o ldif-wrap=no -Y EXTERNAL -H ldapi:/// -b "cn=config" | less
+vim $(which openldap-server.bash)
+ldapsearch -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 
+ldapsearch -Y EXTERNAL -H ldapi:/// -b "cn=config" "(olcDatabase=*)" dn 
+ldapwhoami -x
+openldap-maria.bash 
+openldap-server.bash 
+ldapwhoami -Y EXTERNAL
+ldapwhoami -x
+su -
+su - herman
+date
